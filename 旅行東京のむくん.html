@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOKYO EXTREME TOUR | 4-Day Itinerary</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --accent-color: #00f2ff;
+            --sub-accent: #ff007a;
+            --text-color: #e0e0e0;
+            --card-bg: #1a1a1a;
+            --border-color: #333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            height: 40vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=1600');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            letter-spacing: 0.2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .header-content p {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: -50px auto 50px;
+            padding: 0 20px;
+        }
+
+        .day-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .day-title {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .day-title span {
+            font-size: 0.9rem;
+            margin-left: 15px;
+            color: #888;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .event {
+            position: relative;
+            padding-bottom: 30px;
+            border-left: 1px solid #444;
+            padding-left: 30px;
+        }
+
+        .event:last-child {
+            border-left: 1px solid transparent;
+            padding-bottom: 0;
+        }
+
+        .event::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 11px;
+            height: 11px;
+            background: var(--sub-accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--sub-accent);
+        }
+
+        .time {
+            font-family: 'Courier New', monospace;
+            color: var(--sub-accent);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .location {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            color: #aaa;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.8rem;
+            color: #555;
+            background: #000;
+        }
+
+        @media (max-width: 600px) {
+            .header-content h1 { font-size: 1.8rem; }
+            .day-section { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <h1>Tokyo Extreme</h1>
+        <p>4 DAYS / IMMERSIVE ARCHIVE</p>
+    </div>
+</header>
+
+<div class="container">
+    <section class="day-section">
+        <div class="day-title">Day 01 <span>Harry Potter & Tokyo Edge</span></div>
+        <div class="timeline">
+            <div class="event">
+                <span class="time">11:00</span>
+                <span class="location">スタジオツアー東京</span>
+                <p class="description">ハリー・ポッター魔法の世界。広大な敷地を約4時間で没入探索。</p>
+            </div>
+            <div class="event">
+                <span class="time">15:30</span>
+                <span class="location">上野：アメ横</span>
+                <p class="description">活気ある商店街で遅めの食べ歩きランチ。大江戸線で直通移動。</p>
+            </div>
+            <div class="event">
+                <span class="time">17:30</span>
+                <span class="location">原宿：竹下通り</span>
+                <p class="description">若者カルチャーの聖地を散策。最新のトレンドをキャッチ。</p>
+            </div>
+            <div class="event">
+                <span class="time">19:00</span>
+                <span class="location">渋谷：MIYASHITA PARK</span>
+                <p class="description">空中公園と渋谷横丁。都会のど真ん中の開放感とカオスを体験。</p>
+            </div>
+            <div class="event">
+                <span class="time">20:30</span>
+                <span class="location">新宿：大久保公園 & トーヨコ</span>
+                <p class="description">夜の歌舞伎町。東京の「今」を象徴する景色を散策。</p>
+            </div>
+            <div class="event">
+                <span class="time">21:30</span>
+                <span class="location">新宿ディナー</span>
+                <p class="description">眠らない街・新宿で1日の締めくくり（焼肉・居酒屋）。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="day-section">
+        <div class="day-title">Day 02 <span>Akiba Deep & Ikebukuro Art</span></div>
+        <div class="timeline">
+            <div class="event">
+                <span class="time">11:30</span>
+                <span class="location">秋葉原：牛丼専門サンボ</span>
+                <p class="description">伝説的牛丼でパワーチャージ。</p>
+            </div>
+            <div class="event">
+                <span class="time">12:30</span>
+                <span class="location">秋葉原：ラジオ会館 & エムズ</span>
+                <p class="description">ホビーからアキバの深淵まで探索。カルチャーの迷宮へ。</p>
+            </div>
+            <div class="event">
+                <span class="time">16:00</span>
+                <span class="location">池袋：森野美術館</span>
+                <p class="description">落ち着いた空間でアートを鑑賞。知的な休息。</p>
+            </div>
+            <div class="event">
+                <span class="time">18:30</span>
+                <span class="location">池袋周辺ディナー</span>
+                <p class="description">池袋の夜を楽しむ。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="day-section">
+        <div class="day-title">Day 03 <span>Bay Area & Icons</span></div>
+        <div class="timeline">
+            <div class="event">
+                <span class="time">10:00</span>
+                <span class="location">豊洲市場</span>
+                <p class="description">市場の活気を感じながら早めのランチ。</p>
+            </div>
+            <div class="event">
+                <span class="time">12:00</span>
+                <span class="location">チームラボプラネッツ豊洲</span>
+                <p class="description">裸足で水に入る没入型デジタルアート体験。</p>
+            </div>
+            <div class="event">
+                <span class="time">14:30</span>
+                <span class="location">月島もんじゃ</span>
+                <p class="description">本場のもんじゃ焼きを堪能。</p>
+            </div>
+            <div class="event">
+                <span class="time">17:00</span>
+                <span class="location">お台場海浜公園</span>
+                <p class="description">夕暮れの海風を感じながらレインボーブリッジを撮影。</p>
+            </div>
+            <div class="event">
+                <span class="time">19:00</span>
+                <span class="location">東京タワー</span>
+                <p class="description">ライトアップされたタワーへ。港区の夜景を堪能。</p>
+            </div>
+            <div class="event">
+                <span class="time">21:00</span>
+                <span class="location">港区周辺ディナー</span>
+                <p class="description">洗練されたエリアでディナー。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="day-section">
+        <div class="day-title">Day 04 <span>Aqua & Departure</span></div>
+        <div class="timeline">
+            <div class="event">
+                <span class="time">10:30</span>
+                <span class="location">マクセル アクアパーク品川</span>
+                <p class="description">最新デジタル演出とイルカショー。光と水の芸術。</p>
+            </div>
+            <div class="event">
+                <span class="time">13:00</span>
+                <span class="location">品川駅周辺</span>
+                <p class="description">最後のお買い物とランチ。帰路へ。</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    &copy; 2026 Tokyo Extreme Journey Plan
+</footer>
+
+</body>
+</html>
+
