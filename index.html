@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOKYO EXTREME TOUR |のむの洗浄とはまもとの洗浄をかねた 4-Day Itinerary</title>
+    <title>TOKYO EXTREME TOUR | 4-Day Itinerary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0a0a0a;
             --accent-color: #00f2ff;
             --sub-accent: #ff007a;
+            --hotel-color: #ffd700;
             --text-color: #e0e0e0;
-            --card-bg: #1a1a1a;
-            --border-color: #333;
+            --card-bg: #111;
+            --border-color: #2a2a2a;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            margin: 0;
-            padding: 0;
         }
 
         header {
-            height: 40vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=1600');
+            height: 45vh;
+            min-height: 280px;
+            background: linear-gradient(160deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 100%),
+                        url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=1600');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -33,61 +36,141 @@
             justify-content: center;
             text-align: center;
             border-bottom: 2px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(0,242,255,0.015) 3px,
+                rgba(0,242,255,0.015) 4px
+            );
+            pointer-events: none;
         }
 
         .header-content h1 {
-            font-size: 2.5rem;
-            letter-spacing: 0.2rem;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.8rem, 8vw, 5rem);
+            letter-spacing: 0.3rem;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(0,242,255,0.5);
+            line-height: 1;
         }
 
-        .header-content p {
+        .header-content .sub {
             color: var(--accent-color);
-            font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 0.4rem;
+            text-transform: uppercase;
+            margin-top: 10px;
+            font-weight: 300;
         }
 
         .container {
-            max-width: 800px;
-            margin: -50px auto 50px;
-            padding: 0 20px;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 50px 20px 60px;
         }
 
+        /* Hotel legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding: 16px 20px;
+            background: #0f0f0f;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .legend-title {
+            width: 100%;
+            font-size: 0.7rem;
+            letter-spacing: 0.2rem;
+            color: #555;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: #aaa;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dot-hotel { background: var(--hotel-color); box-shadow: 0 0 8px var(--hotel-color); }
+        .dot-spot  { background: var(--sub-accent);  box-shadow: 0 0 8px var(--sub-accent); }
+
+        /* Day section */
         .day-section {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 36px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
         }
 
-        .day-title {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            border-bottom: 1px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-bottom: 25px;
+        .day-header {
             display: flex;
             align-items: baseline;
+            gap: 14px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 14px;
+            margin-bottom: 26px;
         }
 
-        .day-title span {
-            font-size: 0.9rem;
-            margin-left: 15px;
-            color: #888;
+        .day-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--accent-color);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(0,242,255,0.4);
         }
 
+        .day-theme {
+            font-size: 0.85rem;
+            color: #666;
+            letter-spacing: 0.05rem;
+        }
+
+        .area-tag {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            border: 1px solid rgba(0,242,255,0.3);
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.05rem;
+            white-space: nowrap;
+        }
+
+        /* Timeline */
         .timeline {
-            position: relative;
-            padding-left: 20px;
+            padding-left: 4px;
         }
 
         .event {
             position: relative;
-            padding-bottom: 30px;
-            border-left: 1px solid #444;
-            padding-left: 30px;
+            padding-bottom: 26px;
+            padding-left: 36px;
+            border-left: 1px solid #2a2a2a;
         }
 
         .event:last-child {
@@ -98,46 +181,78 @@
         .event::before {
             content: '';
             position: absolute;
-            left: -6px;
-            top: 5px;
-            width: 11px;
-            height: 11px;
+            left: -5px;
+            top: 6px;
+            width: 9px;
+            height: 9px;
             background: var(--sub-accent);
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--sub-accent);
+            box-shadow: 0 0 8px var(--sub-accent);
+        }
+
+        .event.is-hotel::before {
+            background: var(--hotel-color);
+            box-shadow: 0 0 12px var(--hotel-color);
+            width: 11px;
+            height: 11px;
+            left: -6px;
         }
 
         .time {
             font-family: 'Courier New', monospace;
             color: var(--sub-accent);
+            font-size: 0.85rem;
             font-weight: bold;
-            font-size: 1.1rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .event.is-hotel .time {
+            color: var(--hotel-color);
         }
 
         .location {
-            font-size: 1.2rem;
-            font-weight: bold;
             display: block;
-            margin: 5px 0;
+            font-size: 1.05rem;
+            font-weight: 700;
             color: #fff;
+            margin: 3px 0 4px;
+        }
+
+        .event.is-hotel .location {
+            color: var(--hotel-color);
         }
 
         .description {
-            font-size: 0.95rem;
-            color: #aaa;
+            font-size: 0.88rem;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .hotel-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            background: rgba(255,215,0,0.12);
+            color: var(--hotel-color);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 4px;
+            padding: 1px 7px;
+            margin-left: 8px;
+            vertical-align: middle;
+            letter-spacing: 0.05rem;
         }
 
         footer {
             text-align: center;
             padding: 30px;
-            font-size: 0.8rem;
-            color: #555;
+            font-size: 0.75rem;
+            color: #333;
             background: #000;
+            letter-spacing: 0.1rem;
         }
 
         @media (max-width: 600px) {
-            .header-content h1 { font-size: 1.8rem; }
             .day-section { padding: 20px; }
+            .area-tag { display: none; }
         }
     </style>
 </head>
@@ -146,59 +261,81 @@
 <header>
     <div class="header-content">
         <h1>Tokyo Extreme</h1>
-        <p>4 DAYS / IMMERSIVE ARCHIVE</p>
+        <p class="sub">4 Days · Optimized Route · 2026</p>
     </div>
 </header>
 
 <div class="container">
+
+    <div class="legend">
+        <div class="legend-title">凡例 / Legend</div>
+        <div class="legend-item"><span class="legend-dot dot-spot"></span>観光スポット</div>
+        <div class="legend-item"><span class="legend-dot dot-hotel"></span>宿泊ホテル（チェックイン）</div>
+    </div>
+
+    <!-- DAY 1 -->
     <section class="day-section">
-        <div class="day-title">Day 01 <span>Harry Potter & Tokyo Edge</span></div>
+        <div class="day-header">
+            <div class="day-number">Day 01</div>
+            <div class="day-theme">Harry Potter → 秋葉原 → 豊洲</div>
+            <div class="area-tag">西武池袋 → 山手線 → 有楽町線</div>
+        </div>
         <div class="timeline">
             <div class="event">
                 <span class="time">11:00</span>
-                <span class="location">スタジオツアー東京</span>
-                <p class="description">ハリー・ポッター魔法の世界。広大な敷地を約4時間で没入探索。</p>
+                <span class="location">スタジオツアー東京（豊島園）</span>
+                <p class="description">ハリー・ポッター魔法の世界へ没入。約4時間で広大な敷地を探索。</p>
             </div>
             <div class="event">
                 <span class="time">15:30</span>
-                <span class="location">上野：アメ横</span>
-                <p class="description">活気ある商店街で遅めの食べ歩きランチ。大江戸線で直通移動。</p>
+                <span class="location">秋葉原：牛丼専門サンボ</span>
+                <p class="description">伝説的な牛丼でパワーチャージ。</p>
             </div>
             <div class="event">
-                <span class="time">17:30</span>
-                <span class="location">原宿：竹下通り</span>
-                <p class="description">若者カルチャーの聖地を散策。最新のトレンドをキャッチ。</p>
+                <span class="time">16:30</span>
+                <span class="location">秋葉原：ラジオ会館 & エムズ</span>
+                <p class="description">ホビーからアキバの深淵まで探索。カルチャーの迷宮へ。</p>
             </div>
             <div class="event">
                 <span class="time">19:00</span>
-                <span class="location">渋谷：MIYASHITA PARK</span>
-                <p class="description">空中公園と渋谷横丁。都会のど真ん中の開放感とカオスを体験。</p>
-            </div>
-            <div class="event">
-                <span class="time">20:30</span>
-                <span class="location">新宿：大久保公園 & トーヨコ</span>
-                <p class="description">夜の歌舞伎町。東京の「今」を象徴する景色を散策。</p>
+                <span class="location">チームラボプラネッツ豊洲</span>
+                <p class="description">裸足で水に入る没入型デジタルアート体験。夜の回は比較的空いている。</p>
             </div>
             <div class="event">
                 <span class="time">21:30</span>
-                <span class="location">新宿ディナー</span>
-                <p class="description">眠らない街・新宿で1日の締めくくり（焼肉・居酒屋）。</p>
+                <span class="location">豊洲周辺ディナー</span>
+                <p class="description">LaLa terrace豊洲やUrban Dockで夕食。</p>
+            </div>
+            <div class="event is-hotel">
+                <span class="time">チェックイン</span>
+                <span class="location">hotel MONday Premium 豊洲 <span class="hotel-badge">HOTEL</span></span>
+                <p class="description">豊洲駅徒歩圏内。翌朝は豊洲市場へ直行。</p>
             </div>
         </div>
     </section>
 
+    <!-- DAY 2 -->
     <section class="day-section">
-        <div class="day-title">Day 02 <span>Akiba Deep & Ikebukuro Art</span></div>
+        <div class="day-header">
+            <div class="day-number">Day 02</div>
+            <div class="day-theme">豊洲市場 → お台場 → 池袋</div>
+            <div class="area-tag">ゆりかもめ → 有楽町線</div>
+        </div>
         <div class="timeline">
             <div class="event">
-                <span class="time">11:30</span>
-                <span class="location">秋葉原：牛丼専門サンボ</span>
-                <p class="description">伝説的牛丼でパワーチャージ。</p>
+                <span class="time">10:00</span>
+                <span class="location">豊洲市場（場外）</span>
+                <p class="description">市場の活気を感じながら早めのランチ。新鮮な海鮮丼で朝食兼昼食。</p>
             </div>
             <div class="event">
-                <span class="time">12:30</span>
-                <span class="location">秋葉原：ラジオ会館 & エムズ</span>
-                <p class="description">ホビーからアキバの深淵まで探索。カルチャーの迷宮へ。</p>
+                <span class="time">12:00</span>
+                <span class="location">お台場海浜公園</span>
+                <p class="description">レインボーブリッジと自由の女神像を望む絶景スポット。</p>
+            </div>
+            <div class="event">
+                <span class="time">13:30</span>
+                <span class="location">月島：もんじゃ焼き</span>
+                <p class="description">本場のもんじゃ焼きを堪能。西仲通り商店街で老舗を探索。</p>
             </div>
             <div class="event">
                 <span class="time">16:00</span>
@@ -208,66 +345,92 @@
             <div class="event">
                 <span class="time">18:30</span>
                 <span class="location">池袋周辺ディナー</span>
-                <p class="description">池袋の夜を楽しむ。</p>
+                <p class="description">池袋の夜を楽しむ。多国籍グルメが揃うエリア。</p>
+            </div>
+            <div class="event is-hotel">
+                <span class="time">チェックイン</span>
+                <span class="location">西葛西ホテル <span class="hotel-badge">HOTEL</span></span>
+                <p class="description">東西線で池袋方面から直通アクセス可能。翌朝は上野へ。</p>
             </div>
         </div>
     </section>
 
+    <!-- DAY 3 -->
     <section class="day-section">
-        <div class="day-title">Day 03 <span>Bay Area & Icons</span></div>
-        <div class="timeline">
-            <div class="event">
-                <span class="time">10:00</span>
-                <span class="location">豊洲市場</span>
-                <p class="description">市場の活気を感じながら早めのランチ。</p>
-            </div>
-            <div class="event">
-                <span class="time">12:00</span>
-                <span class="location">チームラボプラネッツ豊洲</span>
-                <p class="description">裸足で水に入る没入型デジタルアート体験。</p>
-            </div>
-            <div class="event">
-                <span class="time">14:30</span>
-                <span class="location">月島もんじゃ</span>
-                <p class="description">本場のもんじゃ焼きを堪能。</p>
-            </div>
-            <div class="event">
-                <span class="time">17:00</span>
-                <span class="location">お台場海浜公園</span>
-                <p class="description">夕暮れの海風を感じながらレインボーブリッジを撮影。</p>
-            </div>
-            <div class="event">
-                <span class="time">19:00</span>
-                <span class="location">東京タワー</span>
-                <p class="description">ライトアップされたタワーへ。港区の夜景を堪能。</p>
-            </div>
-            <div class="event">
-                <span class="time">21:00</span>
-                <span class="location">港区周辺ディナー</span>
-                <p class="description">洗練されたエリアでディナー。</p>
-            </div>
+        <div class="day-header">
+            <div class="day-number">Day 03</div>
+            <div class="day-theme">上野 → 原宿 → 渋谷 → 新宿</div>
+            <div class="area-tag">山手線一周ルート</div>
         </div>
-    </section>
-
-    <section class="day-section">
-        <div class="day-title">Day 04 <span>Aqua & Departure</span></div>
         <div class="timeline">
             <div class="event">
-                <span class="time">10:30</span>
-                <span class="location">マクセル アクアパーク品川</span>
-                <p class="description">最新デジタル演出とイルカショー。光と水の芸術。</p>
+                <span class="time">11:00</span>
+                <span class="location">上野：アメ横</span>
+                <p class="description">活気ある商店街で食べ歩きランチ。西葛西から東西線＋乗り換えで直通。</p>
             </div>
             <div class="event">
                 <span class="time">13:00</span>
-                <span class="location">品川駅周辺</span>
-                <p class="description">最後のお買い物とランチ。帰路へ。</p>
+                <span class="location">原宿：竹下通り</span>
+                <p class="description">若者カルチャーの聖地を散策。最新のトレンドをキャッチ。</p>
+            </div>
+            <div class="event">
+                <span class="time">15:00</span>
+                <span class="location">渋谷：MIYASHITA PARK</span>
+                <p class="description">空中公園と渋谷横丁。都会のど真ん中の開放感とカオスを体験。</p>
+            </div>
+            <div class="event">
+                <span class="time">17:00</span>
+                <span class="location">新宿：大久保公園 & トーヨコ</span>
+                <p class="description">夜の歌舞伎町。東京の「今」を象徴する景色を散策。</p>
+            </div>
+            <div class="event">
+                <span class="time">19:00</span>
+                <span class="location">新宿ディナー（焼肉・居酒屋）</span>
+                <p class="description">眠らない街・新宿で1日の締めくくり。</p>
+            </div>
+            <div class="event is-hotel">
+                <span class="time">チェックイン</span>
+                <span class="location">人形町（都営浅草線） <span class="hotel-badge">HOTEL</span></span>
+                <p class="description">新宿から都営新宿線→浅草線で人形町へ。翌日は品川・港区エリアへ直通。</p>
             </div>
         </div>
     </section>
+
+    <!-- DAY 4 -->
+    <section class="day-section">
+        <div class="day-header">
+            <div class="day-number">Day 04</div>
+            <div class="day-theme">東京タワー → 品川 → 出発</div>
+            <div class="area-tag">都営浅草線直通ルート</div>
+        </div>
+        <div class="timeline">
+            <div class="event">
+                <span class="time">10:00</span>
+                <span class="location">東京タワー</span>
+                <p class="description">人形町から都営浅草線で大門駅下車、徒歩圏内。港区の絶景を堪能。</p>
+            </div>
+            <div class="event">
+                <span class="time">12:00</span>
+                <span class="location">港区周辺ランチ</span>
+                <p class="description">麻布台ヒルズや六本木エリアで洗練されたランチ。</p>
+            </div>
+            <div class="event">
+                <span class="time">13:30</span>
+                <span class="location">マクセル アクアパーク品川</span>
+                <p class="description">最新デジタル演出とイルカショー。光と水の芸術。品川駅から徒歩5分。</p>
+            </div>
+            <div class="event">
+                <span class="time">16:00</span>
+                <span class="location">品川駅周辺</span>
+                <p class="description">最後のお買い物。羽田・新幹線など各方面へのアクセス抜群。帰路へ。</p>
+            </div>
+        </div>
+    </section>
+
 </div>
 
 <footer>
-    &copy; 2026 Tokyo Extreme Journey Plan
+    &copy; 2026 Tokyo Extreme Journey Plan &nbsp;·&nbsp; ホテル動線最適化版
 </footer>
 
 </body>
