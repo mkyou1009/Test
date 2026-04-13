@@ -1,800 +1,191 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOKYO EXTREME 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --c:#00f0ff;--p:#ff003c;--g:#39ff14;--gold:#ffd23f;--purple:#bf00ff;
-  --bg:#02020a;--card:#06060f;
-  --glow-c:0 0 20px rgba(0,240,255,0.8),0 0 60px rgba(0,240,255,0.4);
-  --glow-p:0 0 20px rgba(255,0,60,0.8),0 0 60px rgba(255,0,60,0.4);
-}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:#b0b0cc;font-family:'Noto Sans JP',sans-serif;overflow-x:hidden;cursor:crosshair}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユウスケの旅行サイト！！ | ARIMA & KOBE TRIP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c0392b; /* 有馬の金泉イメージ */
+            --secondary: #2980b9; /* 神戸の海イメージ */
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
 
-/* ═══ CUSTOM CURSOR ═══ */
-#cursor{position:fixed;width:20px;height:20px;border:1px solid var(--c);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .15s,height .15s,border-color .15s;mix-blend-mode:screen}
-#cursor-dot{position:fixed;width:4px;height:4px;background:var(--c);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .05s}
-body:hover #cursor{width:28px;height:28px}
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            margin: 0;
+            background-color: var(--light);
+            color: var(--dark);
+        }
 
-/* ═══ CANVAS LAYERS ═══ */
-#cv-matrix,#cv-particles,#cv-lightning{position:fixed;inset:0;pointer-events:none;z-index:0}
-#cv-matrix{opacity:.045}
-#cv-particles{opacity:.9}
-#cv-lightning{opacity:.7;mix-blend-mode:screen}
+        header {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
 
-/* ═══ SCANLINES ═══ */
-#scanlines{
-  position:fixed;inset:0;z-index:9997;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.18) 2px,rgba(0,0,0,.18) 4px);
-  animation:scanMove 6s linear infinite;
-}
-@keyframes scanMove{to{background-position:0 400px}}
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
 
-/* ═══ RGB ABERRATION OVERLAY ═══ */
-#rgb-overlay{
-  position:fixed;inset:0;z-index:9996;pointer-events:none;opacity:0;
-  background:linear-gradient(90deg,rgba(255,0,60,.05),transparent 20%,rgba(0,240,255,.05) 80%,transparent);
-  animation:rgbPulse 0.08s steps(1) infinite;
-}
-@keyframes rgbPulse{0%{opacity:0}10%{opacity:1}11%{opacity:0}90%{opacity:0}95%{opacity:.5}100%{opacity:0}}
+        header p {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: var(--primary);
+            padding: 5px 20px;
+            margin-top: 15px;
+        }
 
-/* ═══ VIGNETTE ═══ */
-body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(2,2,10,.8) 100%);pointer-events:none;z-index:9995}
+        .container {
+            max-width: 1000px;
+            margin: -50px auto 50px;
+            padding: 0 20px;
+        }
 
-/* ══════════════════════════════════════════
-   HERO
-══════════════════════════════════════════ */
-.hero{position:relative;height:100vh;min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
 
-.hero-bg{
-  position:absolute;inset:0;
-  background:url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=1800') center/cover;
-  filter:brightness(.12) saturate(.15) hue-rotate(190deg);
-  animation:bgZoom 20s ease-in-out infinite alternate, bgHue 15s linear infinite;
-}
-@keyframes bgZoom{0%{transform:scale(1)}100%{transform:scale(1.18) translateY(-3%)}}
-@keyframes bgHue{0%{filter:brightness(.12) saturate(.15) hue-rotate(190deg)}50%{filter:brightness(.12) saturate(.2) hue-rotate(240deg)}100%{filter:brightness(.12) saturate(.15) hue-rotate(190deg)}}
+        .day-badge {
+            background: var(--dark);
+            color: white;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-/* Animated neon grid */
-.hero-grid{
-  position:absolute;inset:-20%;z-index:1;
-  background-image:
-    linear-gradient(rgba(0,240,255,.06) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,240,255,.06) 1px,transparent 1px);
-  background-size:80px 80px;
-  animation:gridDrift 20s linear infinite, gridPulse 3s ease-in-out infinite;
-  transform-origin:center;
-}
-@keyframes gridDrift{0%{transform:perspective(400px) rotateX(25deg) translateY(0)}100%{transform:perspective(400px) rotateX(25deg) translateY(80px)}}
-@keyframes gridPulse{0%,100%{opacity:.4}50%{opacity:1}}
+        h2 {
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
 
-/* Horizon glow */
-.hero-glow{
-  position:absolute;bottom:0;left:0;right:0;height:40%;z-index:2;
-  background:linear-gradient(transparent,rgba(0,240,255,.08));
-  animation:glowBreath 4s ease-in-out infinite;
-}
-@keyframes glowBreath{0%,100%{opacity:.4}50%{opacity:1}}
+        .timeline {
+            border-left: 2px dashed #ccc;
+            margin-left: 20px;
+            padding-left: 30px;
+            position: relative;
+        }
 
-/* Side neon lines */
-.hero-lines{position:absolute;inset:0;z-index:2;overflow:hidden}
-.neon-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,var(--c),transparent);animation:lineSweep 4s ease-in-out infinite;opacity:0}
-.neon-line:nth-child(1){top:25%;animation-delay:0s}
-.neon-line:nth-child(2){top:45%;animation-delay:1.3s;background:linear-gradient(90deg,transparent,var(--p),transparent)}
-.neon-line:nth-child(3){top:68%;animation-delay:2.6s;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-@keyframes lineSweep{0%{left:-100%;width:100%;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+        .timeline-item {
+            margin-bottom: 30px;
+            position: relative;
+        }
 
-/* COUNT UP display */
-.hero-data{
-  position:absolute;top:24px;right:24px;z-index:5;
-  font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.2em;
-  color:rgba(0,240,255,.5);line-height:2;text-align:right;
-  animation:dataFlicker 4s linear infinite;
-}
-@keyframes dataFlicker{0%,98%,100%{opacity:1}99%{opacity:.2}}
-.hero-data-l{
-  position:absolute;top:24px;left:24px;z-index:5;
-  font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.2em;
-  color:rgba(255,0,60,.4);line-height:2;
-}
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -39px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
 
-/* ═══ MAIN TITLE ═══ */
-.hero-content{position:relative;z-index:5;text-align:center}
+        .timeline-item h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+        }
 
-.pre-title{
-  font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.6em;
-  color:var(--c);text-transform:uppercase;margin-bottom:20px;
-  display:block;
-  animation:preFade 1.5s ease both,preGlow 2s ease-in-out infinite 1.5s;
-  text-shadow:var(--glow-c);
-}
-@keyframes preFade{0%{opacity:0;letter-spacing:1.5em}100%{opacity:1;letter-spacing:.6em}}
-@keyframes preGlow{0%,100%{text-shadow:0 0 10px rgba(0,240,255,.3)}50%{text-shadow:0 0 30px rgba(0,240,255,1),0 0 60px rgba(0,240,255,.5)}}
+        .day2 .timeline-item::before {
+            background: var(--secondary);
+        }
+        .day2 h2 { border-left-color: var(--secondary); }
+        .day2 h3 { color: var(--secondary); }
 
-.title-block{position:relative;display:inline-block}
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--dark);
+            color: white;
+            font-size: 0.9rem;
+        }
 
-/* The giant TOKYO */
-.t-tokyo{
-  display:block;font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(6rem,22vw,18rem);line-height:.85;
-  color:#fff;letter-spacing:.05em;
-  position:relative;
-  animation:titleIn 1s .2s cubic-bezier(.16,1,.3,1) both;
-}
-@keyframes titleIn{from{opacity:0;transform:translateY(60px) scaleX(1.2)}to{opacity:1;transform:none}}
-
-/* EXTREME in neon cyan with glow */
-.t-extreme{
-  display:block;font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(6rem,22vw,18rem);line-height:.85;
-  color:var(--c);letter-spacing:.05em;
-  text-shadow:0 0 40px rgba(0,240,255,.9),0 0 80px rgba(0,240,255,.5),0 0 160px rgba(0,240,255,.2);
-  animation:titleIn 1s .35s cubic-bezier(.16,1,.3,1) both, extremePulse 3s ease-in-out infinite 1.5s;
-  position:relative;
-}
-@keyframes extremePulse{
-  0%,100%{text-shadow:0 0 40px rgba(0,240,255,.9),0 0 80px rgba(0,240,255,.5)}
-  50%{text-shadow:0 0 80px rgba(0,240,255,1),0 0 160px rgba(0,240,255,.8),0 0 300px rgba(0,240,255,.3)}
-}
-
-/* RGB SPLIT on EXTREME */
-.t-extreme::before{
-  content:'EXTREME';position:absolute;inset:0;
-  color:var(--p);opacity:.6;
-  text-shadow:none;
-  animation:rgbSplitR 5s infinite;
-}
-.t-extreme::after{
-  content:'EXTREME';position:absolute;inset:0;
-  color:var(--g);opacity:.4;
-  text-shadow:none;
-  animation:rgbSplitG 5s infinite .1s;
-}
-@keyframes rgbSplitR{
-  0%,88%,100%{transform:translate(0)}
-  89%{transform:translate(-6px,-2px)}
-  91%{transform:translate(6px,1px)}
-  93%{transform:translate(-4px,3px)}
-  95%{transform:translate(0)}
-}
-@keyframes rgbSplitG{
-  0%,88%,100%{transform:translate(0)}
-  89%{transform:translate(6px,2px)}
-  91%{transform:translate(-4px,-1px)}
-  93%{transform:translate(3px,-2px)}
-  95%{transform:translate(0)}
-}
-
-/* GLITCH slice on TOKYO */
-.t-tokyo::before,.t-tokyo::after{
-  content:'TOKYO';position:absolute;inset:0;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:inherit;line-height:inherit;letter-spacing:inherit;
-}
-.t-tokyo::before{color:var(--p);animation:gSlice1 7s infinite;clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%)}
-.t-tokyo::after{color:var(--c);animation:gSlice2 7s infinite .4s;clip-path:polygon(0 60%,100% 60%,100% 75%,0 75%);opacity:.6}
-@keyframes gSlice1{0%,85%,100%{transform:translateX(0);opacity:0}86%{transform:translateX(-8px);opacity:.8}88%{transform:translateX(8px);opacity:.8}90%{transform:translateX(0);opacity:0}}
-@keyframes gSlice2{0%,82%,100%{transform:translateX(0);opacity:0}83%{transform:translateX(10px);opacity:.6}85%{transform:translateX(-6px);opacity:.6}87%{transform:translateX(0);opacity:0}}
-
-.hero-tagline{
-  font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.35em;
-  color:rgba(176,176,204,.5);margin-top:20px;display:block;
-  animation:titleIn 1s .5s both;
-}
-
-/* SCROLL */
-.scroll-hint{
-  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
-  z-index:5;display:flex;flex-direction:column;align-items:center;gap:6px;
-}
-.scroll-beam{width:1px;height:60px;position:relative;overflow:hidden;background:rgba(0,240,255,.1)}
-.scroll-beam::after{
-  content:'';position:absolute;top:-100%;width:100%;height:100%;
-  background:linear-gradient(var(--c),rgba(0,240,255,0));
-  animation:beamFall 1.6s ease-in-out infinite;
-}
-@keyframes beamFall{0%{top:-100%}100%{top:200%}}
-.scroll-txt{font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:.3em;color:rgba(0,240,255,.4)}
-
-/* CORNER BRACKETS */
-.brackets{position:absolute;inset:0;z-index:4;pointer-events:none}
-.br{position:absolute;width:50px;height:50px}
-.br svg{width:100%;height:100%}
-.br-tl{top:20px;left:20px}
-.br-tr{top:20px;right:20px;transform:scaleX(-1)}
-.br-bl{bottom:20px;left:20px;transform:scaleY(-1)}
-.br-br{bottom:20px;right:20px;transform:scale(-1,-1)}
-.br-path{stroke:var(--c);stroke-width:1.5;fill:none;animation:brPulse 2s ease-in-out infinite}
-@keyframes brPulse{0%,100%{stroke:var(--c);opacity:.4}50%{stroke:#fff;opacity:1;filter:drop-shadow(0 0 6px var(--c))}}
-
-/* ══════════════════════════════════════════
-   LEGEND
-══════════════════════════════════════════ */
-.legend{
-  position:relative;z-index:10;max-width:1000px;margin:0 auto;
-  padding:12px 28px;display:flex;gap:24px;align-items:center;
-  background:rgba(0,240,255,.02);border-bottom:1px solid rgba(0,240,255,.08);
-}
-.legend>span{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.25em;color:#333355;text-transform:uppercase}
-.li{display:flex;align-items:center;gap:8px}
-.li>span:last-child{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;color:#333355}
-.ld{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.ld-s{background:var(--p);box-shadow:0 0 10px var(--p)}
-.ld-h{background:var(--gold);box-shadow:0 0 10px var(--gold)}
-
-/* ══════════════════════════════════════════
-   NAV
-══════════════════════════════════════════ */
-.day-nav{position:fixed;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:200}
-.dn{display:flex;align-items:center;gap:10px;cursor:pointer;border:none;background:none;padding:0;flex-direction:row-reverse}
-.dn-dot{width:5px;height:5px;border-radius:50%;background:#222240;transition:all .4s cubic-bezier(.34,1.56,.64,1)}
-.dn-label{font-family:'Space Mono',monospace;font-size:.52rem;color:#222240;letter-spacing:.1em;opacity:0;transform:translateX(8px);transition:all .3s;white-space:nowrap}
-.dn:hover .dn-label,.dn.active .dn-label{opacity:1;transform:translateX(0);color:var(--c)}
-.dn.active .dn-dot{background:var(--c);box-shadow:0 0 16px var(--c),0 0 30px rgba(0,240,255,.4);transform:scale(2.5)}
-.dn:hover .dn-dot{background:var(--c);transform:scale(1.8)}
-
-/* ══════════════════════════════════════════
-   MAIN
-══════════════════════════════════════════ */
-.main{position:relative;z-index:10;max-width:1000px;margin:0 auto;padding:80px 28px 140px}
-
-/* ══════════════════════════════════════════
-   DAY SECTION
-══════════════════════════════════════════ */
-.day-section{
-  margin-bottom:100px;
-  opacity:0;transform:translateY(50px);
-  transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);
-}
-.day-section.visible{opacity:1;transform:none}
-
-/* BIG DAY HEADER */
-.day-header{position:relative;margin-bottom:0;overflow:hidden;padding:30px 0 0}
-
-/* Giant background day number */
-.day-ghost{
-  position:absolute;top:-10px;left:-20px;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(10rem,20vw,18rem);
-  line-height:1;color:transparent;
-  -webkit-text-stroke:1px rgba(0,240,255,.07);
-  user-select:none;pointer-events:none;
-  z-index:0;
-  animation:ghostBreath 4s ease-in-out infinite;
-}
-@keyframes ghostBreath{0%,100%{-webkit-text-stroke-color:rgba(0,240,255,.04)}50%{-webkit-text-stroke-color:rgba(0,240,255,.12)}}
-
-.day-header-inner{position:relative;z-index:1;display:flex;align-items:flex-end;gap:20px}
-.day-num-small{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,8vw,6rem);line-height:1;
-  color:var(--c);text-shadow:var(--glow-c);
-  flex-shrink:0;
-  animation:numGlow 3s ease-in-out infinite;
-}
-@keyframes numGlow{0%,100%{text-shadow:0 0 20px rgba(0,240,255,.6)}50%{text-shadow:0 0 40px rgba(0,240,255,1),0 0 80px rgba(0,240,255,.5)}}
-
-.day-meta{flex:1}
-.day-tag{
-  font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.25em;
-  color:var(--p);text-transform:uppercase;display:block;margin-bottom:6px;
-  text-shadow:0 0 12px rgba(255,0,60,.6);
-}
-.day-title{font-size:clamp(.95rem,2.5vw,1.45rem);font-weight:900;color:#fff;line-height:1.25}
-.day-route{font-family:'Space Mono',monospace;font-size:.52rem;color:#252545;letter-spacing:.08em;text-align:right;padding-bottom:8px;flex-shrink:0;line-height:1.9}
-
-/* ANIMATED DIVIDER */
-.day-divider{
-  height:2px;margin:16px 0 40px;position:relative;overflow:hidden;
-  background:rgba(255,255,255,.03);border-radius:1px;
-}
-.day-divider::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,var(--c) 30%,var(--p) 60%,var(--gold) 80%,transparent);
-  width:60%;
-  animation:divRace 2s linear infinite;
-}
-@keyframes divRace{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
-.day-divider::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,var(--c),var(--p),var(--gold),var(--purple),var(--c));
-  background-size:200%;
-  opacity:0;
-  animation:divReveal .8s .1s cubic-bezier(.22,1,.36,1) forwards;
-}
-.day-section.visible .day-divider::after{opacity:.15;animation:divReveal .8s .1s forwards,divGlow 3s 1s ease-in-out infinite}
-@keyframes divReveal{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1);transform-origin:left}}
-@keyframes divGlow{0%,100%{opacity:.1}50%{opacity:.3}}
-
-/* ══════════════════════════════════════════
-   TIMELINE
-══════════════════════════════════════════ */
-.event{
-  display:grid;grid-template-columns:68px 28px 1fr;gap:0 16px;
-  opacity:0;transform:translateX(-24px) skewX(-1deg);
-  transition:opacity .5s,transform .5s cubic-bezier(.16,1,.3,1);
-}
-.event.ev-in{opacity:1;transform:none}
-
-.event-time-col{text-align:right;padding-top:6px}
-.time{
-  font-family:'Space Mono',monospace;font-size:.66rem;color:var(--p);
-  font-weight:700;line-height:1.4;display:block;
-  text-shadow:0 0 12px rgba(255,0,60,.6);
-  transition:color .3s;
-}
-.event.is-hotel .time{color:var(--gold);text-shadow:0 0 12px rgba(255,210,63,.6)}
-
-.event-spine{display:flex;flex-direction:column;align-items:center}
-.ev-dot{
-  width:10px;height:10px;border-radius:50%;background:var(--p);
-  box-shadow:0 0 12px var(--p),0 0 30px rgba(255,0,60,.3);
-  flex-shrink:0;margin-top:5px;
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
-}
-.event:hover .ev-dot{transform:scale(2);box-shadow:0 0 24px var(--p),0 0 60px rgba(255,0,60,.5)}
-.event.is-hotel .ev-dot{
-  width:14px;height:14px;background:var(--gold);margin-top:3px;
-  box-shadow:0 0 16px var(--gold),0 0 40px rgba(255,210,63,.4);
-  animation:hotelPulse 1.8s ease-in-out infinite;
-}
-@keyframes hotelPulse{
-  0%,100%{box-shadow:0 0 12px var(--gold),0 0 0 0 rgba(255,210,63,0);transform:scale(1)}
-  50%{box-shadow:0 0 30px var(--gold),0 0 60px rgba(255,210,63,.3),0 0 0 8px rgba(255,210,63,.05);transform:scale(1.15)}
-}
-
-.ev-line{
-  flex:1;width:1px;min-height:20px;position:relative;overflow:hidden;
-  background:rgba(0,240,255,.07);
-}
-.ev-line::after{
-  content:'';position:absolute;top:-60%;width:100%;height:60%;
-  background:linear-gradient(transparent,var(--c),transparent);
-  animation:lineFlow 2.5s ease-in-out infinite;opacity:.5;
-}
-@keyframes lineFlow{0%{top:-60%}100%{top:160%}}
-
-.event-body{padding-bottom:22px}
-
-/* ═══ THE CARD ═══ */
-.event-card{
-  background:linear-gradient(135deg,rgba(6,6,15,1),rgba(10,10,22,1));
-  border:1px solid rgba(0,240,255,.08);
-  border-radius:10px;padding:16px 22px;
-  position:relative;overflow:hidden;
-  transition:border-color .4s,transform .35s cubic-bezier(.16,1,.3,1),box-shadow .4s;
-}
-
-/* Animated gradient border */
-.event-card::before{
-  content:'';position:absolute;inset:-1px;border-radius:11px;
-  background:linear-gradient(135deg,var(--c),var(--p),var(--gold),var(--purple));
-  background-size:300%;z-index:-1;opacity:0;
-  transition:opacity .3s;
-  animation:borderRotate 4s linear infinite;
-}
-@keyframes borderRotate{0%{background-position:0%}100%{background-position:300%}}
-
-/* Left bar */
-.event-card .lbar{
-  position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:2px;
-  background:linear-gradient(var(--p),rgba(255,0,60,.2));
-  transition:width .3s,top .3s,bottom .3s;
-  box-shadow:2px 0 12px rgba(255,0,60,.4);
-}
-.event.is-hotel .event-card .lbar{background:linear-gradient(var(--gold),rgba(255,210,63,.2));box-shadow:2px 0 12px rgba(255,210,63,.5)}
-
-/* Top-right corner */
-.event-card .ctag{
-  position:absolute;top:0;right:0;width:30px;height:30px;
-  border-top:1px solid rgba(0,240,255,.2);
-  border-right:1px solid rgba(0,240,255,.2);
-  border-radius:0 10px 0 0;
-  transition:width .3s,height .3s,border-color .3s;
-}
-
-/* Scan line effect inside card */
-.event-card .cscan{
-  position:absolute;inset:0;pointer-events:none;opacity:0;
-  background:linear-gradient(transparent 48%,rgba(0,240,255,.03) 50%,transparent 52%);
-  background-size:100% 8px;
-  animation:cscanMove 3s linear infinite;
-  transition:opacity .3s;
-}
-@keyframes cscanMove{to{background-position:0 100px}}
-
-/* Shimmer */
-.event-card .cshine{
-  position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.04) 50%,transparent 60%);
-  transform:translateX(-200%);transition:transform 0s;
-}
-
-.event-card:hover{
-  border-color:transparent;
-  transform:translateX(8px) scale(1.01);
-  box-shadow:0 12px 60px rgba(0,0,0,.8),-8px 0 30px rgba(0,240,255,.08),0 0 0 1px rgba(0,240,255,.08);
-}
-.event-card:hover::before{opacity:.07}
-.event-card:hover .ctag{width:40px;height:40px;border-color:rgba(0,240,255,.5)}
-.event-card:hover .cscan{opacity:1}
-.event-card:hover .cshine{animation:shine .5s ease forwards}
-.event-card:hover .lbar{top:0;bottom:0;width:4px}
-@keyframes shine{to{transform:translateX(200%)}}
-.event.is-hotel .event-card:hover{box-shadow:0 12px 60px rgba(0,0,0,.8),-8px 0 30px rgba(255,210,63,.1)}
-
-.location{
-  font-size:1rem;font-weight:700;color:#e8e8f8;
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;line-height:1.3;
-  transition:color .3s,text-shadow .3s;
-}
-.event.is-hotel .location{color:var(--gold);text-shadow:0 0 20px rgba(255,210,63,.4)}
-.event-card:hover .location{color:#fff;text-shadow:0 0 20px rgba(0,240,255,.3)}
-
-.hotel-badge{
-  font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:.18em;
-  color:var(--gold);border:1px solid rgba(255,210,63,.5);
-  background:rgba(255,210,63,.06);padding:2px 8px;border-radius:3px;
-  flex-shrink:0;
-  animation:badgeBlink 3s ease-in-out infinite;
-}
-@keyframes badgeBlink{
-  0%,90%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,210,63,0)}
-  50%{box-shadow:0 0 0 4px rgba(255,210,63,.08)}
-  95%{opacity:.4}
-}
-
-.description{font-size:.82rem;color:#30304a;margin-top:5px;line-height:1.75;transition:color .3s}
-.event-card:hover .description{color:#555570}
-
-/* ══════════════════════════════════════════
-   SECTION LABEL
-══════════════════════════════════════════ */
-.sec-label{
-  display:flex;align-items:center;gap:16px;margin-bottom:16px;
-  font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.25em;color:#1c1c36;
-}
-.sec-label::after{content:'';flex:1;height:1px;background:rgba(0,240,255,.05)}
-.sec-label-dot{width:4px;height:4px;border-radius:50%;background:var(--c);box-shadow:0 0 6px var(--c)}
-
-/* ══════════════════════════════════════════
-   FOOTER
-══════════════════════════════════════════ */
-footer{
-  position:relative;z-index:10;text-align:center;padding:60px;
-  font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.3em;
-  color:#1a1a32;border-top:1px solid rgba(0,240,255,.05);
-}
-.footer-bar{
-  display:flex;justify-content:center;align-items:center;gap:4px;margin-bottom:20px;
-}
-.fbar{
-  height:2px;background:var(--c);
-  animation:fbarGrow 2s ease-in-out infinite alternate;
-  border-radius:1px;
-}
-.fbar:nth-child(1){width:4px;animation-delay:0s}
-.fbar:nth-child(2){width:8px;animation-delay:.1s;background:var(--p)}
-.fbar:nth-child(3){width:20px;animation-delay:.2s}
-.fbar:nth-child(4){width:8px;animation-delay:.3s;background:var(--gold)}
-.fbar:nth-child(5){width:4px;animation-delay:.4s;background:var(--purple)}
-@keyframes fbarGrow{from{transform:scaleY(1)}to{transform:scaleY(3)}}
-
-/* ══════════════════════════════════════════
-   NEON FLASH (random)
-══════════════════════════════════════════ */
-#neon-flash{
-  position:fixed;inset:0;pointer-events:none;z-index:9994;
-  background:rgba(0,240,255,.02);opacity:0;
-  animation:neonFlash 8s ease-in-out infinite;
-}
-@keyframes neonFlash{0%,88%,92%,100%{opacity:0}89%{opacity:1}90%{opacity:0}91%{opacity:.5}}
-
-@media(max-width:600px){
-  .event{grid-template-columns:52px 22px 1fr}
-  .day-route{display:none}
-  .day-ghost{font-size:8rem}
-  .hero-data,.hero-data-l{display:none}
-  .day-nav .dn-label{display:none}
-}
-</style>
+        .highlight {
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
 </head>
 <body>
-<div id="neon-flash"></div>
-<div id="scanlines"></div>
-<div id="rgb-overlay"></div>
-<div id="cursor"></div>
-<div id="cursor-dot"></div>
-<canvas id="cv-matrix"></canvas>
-<canvas id="cv-particles"></canvas>
-<canvas id="cv-lightning"></canvas>
 
-<!-- ═══ HERO ═══ -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-lines">
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-  </div>
+<header>
+    <h1>ユウスケの旅行サイト！！</h1>
+    <p>有馬温泉・六甲山・神戸 1泊2日 SPECIAL PLAN</p>
+</header>
 
-  <div class="hero-data">
-    LAT 35.6762° N<br>LON 139.6503° E<br>ALT 40M<br>——————<br>4 DAYS<br>22 SPOTS<br>3 HOTELS<br>——————<br><span id="clock">--:--:--</span>
-  </div>
-  <div class="hero-data-l">
-    SYS:ONLINE<br>ROUTE:OPTIMIZED<br>STATUS:ACTIVE<br>——————<br>TOKYO/2026<br>EXTREME TOUR
-  </div>
-
-  <!-- brackets -->
-  <div class="brackets">
-    <div class="br br-tl"><svg viewBox="0 0 50 50"><path d="M2 48 L2 2 L48 2" class="br-path"/><circle cx="2" cy="2" r="2.5" fill="var(--c)" opacity=".8"/></svg></div>
-    <div class="br br-tr"><svg viewBox="0 0 50 50"><path d="M2 48 L2 2 L48 2" class="br-path"/><circle cx="2" cy="2" r="2.5" fill="var(--c)" opacity=".8"/></svg></div>
-    <div class="br br-bl"><svg viewBox="0 0 50 50"><path d="M2 48 L2 2 L48 2" class="br-path"/></svg></div>
-    <div class="br br-br"><svg viewBox="0 0 50 50"><path d="M2 48 L2 2 L48 2" class="br-path"/></svg></div>
-  </div>
-
-  <div class="hero-content">
-    <span class="pre-title">4 Days · Tokyo · 2026 · 最強の旅程</span>
-    <div class="title-block">
-      <span class="t-tokyo">TOKYO</span>
-      <span class="t-extreme">EXTREME</span>
+<div class="container">
+    <div class="card">
+        <span class="day-badge">DAY 01</span>
+        <h2>空の絶景から名湯へ吸い込まれる日</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h3>AM: 出発〜六甲山頂へ</h3>
+                <p>東広島からドライブ開始！まずは山頂の開放感を目指す。</p>
+            </div>
+            <div class="timeline-item">
+                <h3>12:30: 六甲ガーデンテラスでランチ</h3>
+                <p>海を見下ろす絶景レストランで、少し贅沢なランチタイム。<span class="highlight">自然体感展望台 六甲枝垂れ</span>でアートに触れる。</p>
+            </div>
+            <div class="timeline-item">
+                <h3>15:00: 六甲有馬ロープウェー</h3>
+                <p>昼間のパノラマを楽しみながら、約12分間の空中散歩。ダイレクトに有馬温泉街へ降臨！</p>
+            </div>
+            <div class="timeline-item">
+                <h3>16:30: 有馬温泉 チェックイン</h3>
+                <p>早めに宿へ。まずは<span class="highlight">「金泉・銀泉」</span>で移動の疲れをリセット。夜は静かな温泉街を散策。</p>
+            </div>
+        </div>
     </div>
-    <span class="hero-tagline">ホテル動線最適化 ／ Optimized Route ／ Immersive Archive</span>
-  </div>
 
-  <div class="scroll-hint">
-    <div class="scroll-beam"></div>
-    <span class="scroll-txt">SCROLL</span>
-  </div>
-</section>
-
-<!-- LEGEND -->
-<div class="legend">
-  <span>凡例</span>
-  <div class="li"><span class="ld ld-s"></span><span>観光スポット</span></div>
-  <div class="li"><span class="ld ld-h"></span><span>宿泊ホテル</span></div>
+    <div class="card day2">
+        <span class="day-badge">DAY 02</span>
+        <h2>異国情緒と港の風を感じる日</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h3>10:00: 有馬温泉街 散策</h3>
+                <p>朝の空気の中、湯本坂でお土産探し。名物の炭酸せんべいをチェック。</p>
+            </div>
+            <div class="timeline-item">
+                <h3>12:00: 神戸市街地（北野 or 南京町）</h3>
+                <p>異人館でカフェを楽しむか、南京町で中華食べ歩き。神戸ならではのグルメを堪能！</p>
+            </div>
+            <div class="timeline-item">
+                <h3>14:30: メリケンパーク・ハーバーランド</h3>
+                <p>神戸ポートタワーや「BE KOBE」記念碑で写真撮影。潮風を感じながらリラックス。</p>
+            </div>
+            <div class="timeline-item">
+                <h3>17:00: 帰路へ</h3>
+                <p>神戸の街をあとに、東広島へ。安全運転で！</p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- NAV -->
-<nav class="day-nav">
-  <button class="dn" data-i="0"><span class="dn-dot"></span><span class="dn-label">DAY 01</span></button>
-  <button class="dn" data-i="1"><span class="dn-dot"></span><span class="dn-label">DAY 02</span></button>
-  <button class="dn" data-i="2"><span class="dn-dot"></span><span class="dn-label">DAY 03</span></button>
-  <button class="dn" data-i="3"><span class="dn-dot"></span><span class="dn-label">DAY 04</span></button>
-</nav>
-
-<main class="main">
-
-<!-- ─── DAY 1 ─── -->
-<section class="day-section" id="day1">
-  <div class="sec-label"><span class="sec-label-dot"></span>01 / 04 · 豊島園 → 秋葉原 → 豊洲</div>
-  <div class="day-header">
-    <div class="day-ghost">01</div>
-    <div class="day-header-inner">
-      <div class="day-num-small">01</div>
-      <div class="day-meta">
-        <span class="day-tag">Day 01 · Harry Potter & Akihabara Deep</span>
-        <div class="day-title">スタジオツアー → 秋葉原 → 豊洲ディナー</div>
-      </div>
-      <div class="day-route">西武池袋線<br>→ JR山手線<br>→ 有楽町線</div>
-    </div>
-  </div>
-  <div class="day-divider"></div>
-  <div class="timeline">
-    <div class="event"><div class="event-time-col"><span class="time">11:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">スタジオツアー東京（豊島園）</div><p class="description">ハリー・ポッター魔法の世界へ没入。約4時間で広大な敷地を探索。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">15:30</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">秋葉原：牛丼専門サンボ</div><p class="description">伝説的な牛丼でパワーチャージ。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">16:30</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">秋葉原：ラジオ会館 & エムズ</div><p class="description">ホビーからアキバの深淵まで探索。カルチャーの迷宮へ。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">20:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">豊洲周辺ディナー</div><p class="description">LaLa terrace豊洲やUrban Dockで夕食。秋葉原から有楽町線で直通。</p></div></div></div>
-    <div class="event is-hotel"><div class="event-time-col"><span class="time">CHECK<br>IN</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">hotel MONday Premium 豊洲 <span class="hotel-badge">★ HOTEL</span></div><p class="description">豊洲駅徒歩圏内。翌朝は豊洲市場へ徒歩でそのままアクセス可能。</p></div></div></div>
-  </div>
-</section>
-
-<!-- ─── DAY 2 ─── -->
-<section class="day-section" id="day2">
-  <div class="sec-label"><span class="sec-label-dot"></span>02 / 04 · 豊洲 → お台場 → 月島 → 池袋</div>
-  <div class="day-header">
-    <div class="day-ghost">02</div>
-    <div class="day-header-inner">
-      <div class="day-num-small">02</div>
-      <div class="day-meta">
-        <span class="day-tag">Day 02 · Bay Area & TeamLab & Art</span>
-        <div class="day-title">豊洲市場 → チームラボ → お台場 → 月島 → 池袋</div>
-      </div>
-      <div class="day-route">ゆりかもめ<br>→ 有楽町線<br>→ 東西線</div>
-    </div>
-  </div>
-  <div class="day-divider"></div>
-  <div class="timeline">
-    <div class="event"><div class="event-time-col"><span class="time">10:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">豊洲市場（場外）</div><p class="description">市場の活気を感じながら朝食兼ランチ。新鮮な海鮮丼。ホテルから徒歩圏内。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">12:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">チームラボプラネッツ豊洲</div><p class="description">裸足で水に入る没入型デジタルアート体験。豊洲市場から徒歩数分、食後のタイミングで。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">14:30</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">お台場海浜公園</div><p class="description">レインボーブリッジと自由の女神像を望む絶景スポット。ゆりかもめで移動。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">16:30</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">月島：もんじゃ焼き</div><p class="description">本場のもんじゃ焼きを堪能。西仲通り商店街で老舗を探索。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">19:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">池袋：森野美術館</div><p class="description">落ち着いた空間でアートを鑑賞。知的な夜の休息。</p></div></div></div>
-    <div class="event is-hotel"><div class="event-time-col"><span class="time">CHECK<br>IN</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">西葛西ホテル <span class="hotel-badge">★ HOTEL</span></div><p class="description">池袋から東西線で西葛西へ直通。翌朝は東西線で上野方面へ。</p></div></div></div>
-  </div>
-</section>
-
-<!-- ─── DAY 3 ─── -->
-<section class="day-section" id="day3">
-  <div class="sec-label"><span class="sec-label-dot"></span>03 / 04 · 上野 → 原宿 → 渋谷 → 新宿</div>
-  <div class="day-header">
-    <div class="day-ghost">03</div>
-    <div class="day-header-inner">
-      <div class="day-num-small">03</div>
-      <div class="day-meta">
-        <span class="day-tag">Day 03 · Harajuku → Shibuya → Shinjuku</span>
-        <div class="day-title">上野 → 原宿 → 渋谷 → 新宿</div>
-      </div>
-      <div class="day-route">山手線<br>一周ルート</div>
-    </div>
-  </div>
-  <div class="day-divider"></div>
-  <div class="timeline">
-    <div class="event"><div class="event-time-col"><span class="time">11:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">上野：アメ横</div><p class="description">活気ある商店街で食べ歩きランチ。西葛西から東西線＋乗り換えでアクセス。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">13:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">原宿：竹下通り</div><p class="description">若者カルチャーの聖地を散策。最新のトレンドをキャッチ。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">15:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">渋谷：MIYASHITA PARK</div><p class="description">空中公園と渋谷横丁。都会のど真ん中の開放感とカオスを体験。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">17:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">新宿：大久保公園 & トーヨコ</div><p class="description">夜の歌舞伎町。東京の「今」を象徴する景色を散策。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">19:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">新宿ディナー（焼肉・居酒屋）</div><p class="description">眠らない街・新宿で1日の締めくくり。</p></div></div></div>
-    <div class="event is-hotel"><div class="event-time-col"><span class="time">CHECK<br>IN</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">人形町（都営浅草線） <span class="hotel-badge">★ HOTEL</span></div><p class="description">新宿から都営新宿線→浅草線で人形町へ。翌日は都営浅草線で大門・品川へ直通。</p></div></div></div>
-  </div>
-</section>
-
-<!-- ─── DAY 4 ─── -->
-<section class="day-section" id="day4">
-  <div class="sec-label"><span class="sec-label-dot"></span>04 / 04 · 人形町 → 東京タワー → 品川</div>
-  <div class="day-header">
-    <div class="day-ghost">04</div>
-    <div class="day-header-inner">
-      <div class="day-num-small">04</div>
-      <div class="day-meta">
-        <span class="day-tag">Day 04 · Tokyo Tower & Departure</span>
-        <div class="day-title">東京タワー → 港区 → アクアパーク品川 → 出発</div>
-      </div>
-      <div class="day-route">都営浅草線<br>直通ルート</div>
-    </div>
-  </div>
-  <div class="day-divider"></div>
-  <div class="timeline">
-    <div class="event"><div class="event-time-col"><span class="time">10:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">東京タワー</div><p class="description">人形町から都営浅草線で大門駅下車、徒歩圏内。港区の絶景を堪能。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">12:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">港区周辺ランチ</div><p class="description">麻布台ヒルズや六本木エリアで洗練されたランチ。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">13:30</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">マクセル アクアパーク品川</div><p class="description">最新デジタル演出とイルカショー。光と水の芸術。品川駅から徒歩5分。</p></div></div></div>
-    <div class="event"><div class="event-time-col"><span class="time">16:00</span></div><div class="event-spine"><div class="ev-dot"></div><div class="ev-line"></div></div><div class="event-body"><div class="event-card"><div class="lbar"></div><div class="ctag"></div><div class="cscan"></div><div class="cshine"></div><div class="location">品川駅周辺</div><p class="description">最後のお買い物。羽田・新幹線など各方面へのアクセス抜群。帰路へ。</p></div></div></div>
-  </div>
-</section>
-
-</main>
-
 <footer>
-  <div class="footer-bar">
-    <div class="fbar"></div><div class="fbar"></div><div class="fbar"></div>
-    <div class="fbar"></div><div class="fbar"></div>
-  </div>
-  &copy; 2026 TOKYO EXTREME JOURNEY PLAN &nbsp;·&nbsp; ホテル動線最適化版
+    &copy; 2026 ユウスケの旅行サイト！！ Produced by Gemini
 </footer>
 
-<script>
-// ══════════ CURSOR ══════════
-const cur=document.getElementById('cursor'),curD=document.getElementById('cursor-dot');
-let mx=0,my=0,cx=0,cy=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;curD.style.left=mx+'px';curD.style.top=my+'px'});
-(function animCur(){cx+=(mx-cx)*.15;cy+=(my-cy)*.15;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(animCur)})();
-
-// ══════════ CLOCK ══════════
-function updateClock(){const n=new Date();document.getElementById('clock').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':')}
-setInterval(updateClock,1000);updateClock();
-
-// ══════════ MATRIX ══════════
-(function(){
-  const c=document.getElementById('cv-matrix'),ctx=c.getContext('2d');
-  let W,H,cols,drops;
-  const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789TOKYO';
-  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;cols=Math.floor(W/16);drops=Array(cols).fill(1)}
-  resize();addEventListener('resize',resize);
-  setInterval(()=>{
-    ctx.fillStyle='rgba(2,2,10,.055)';ctx.fillRect(0,0,W,H);
-    drops.forEach((y,i)=>{
-      const ch=chars[Math.floor(Math.random()*chars.length)];
-      const bright=Math.random();
-      ctx.fillStyle=bright>.9?'#ffffff':bright>.7?'#00f0ff':'rgba(0,240,255,.5)';
-      ctx.font=`${13+Math.random()*4}px 'Space Mono',monospace`;
-      ctx.globalAlpha=.15+Math.random()*.6;
-      ctx.fillText(ch,i*16,y*16);
-      if(y*16>H&&Math.random()>.975)drops[i]=0;
-      drops[i]++;
-    });
-    ctx.globalAlpha=1;
-  },55);
-})();
-
-// ══════════ PARTICLES ══════════
-(function(){
-  const c=document.getElementById('cv-particles'),ctx=c.getContext('2d');
-  let W,H;
-  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
-  resize();addEventListener('resize',resize);
-  const COLS=['#00f0ff','#ff003c','#ffd23f','#bf00ff','#39ff14'];
-  const ps=Array.from({length:80},()=>mkP());
-  function mkP(){return{x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.6,vy:-Math.random()*.8-.1,r:Math.random()*2.5+.3,a:Math.random()*.7+.15,col:COLS[Math.floor(Math.random()*COLS.length)],life:Math.random()*250+80,maxLife:330,trail:[]}}
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-    ps.forEach((p,i)=>{
-      p.trail.push({x:p.x,y:p.y});
-      if(p.trail.length>6)p.trail.shift();
-      // draw trail
-      if(p.trail.length>1){
-        ctx.beginPath();ctx.moveTo(p.trail[0].x,p.trail[0].y);
-        p.trail.forEach(pt=>ctx.lineTo(pt.x,pt.y));
-        ctx.strokeStyle=p.col;ctx.lineWidth=p.r*.5;ctx.globalAlpha=p.a*.3*(p.life/p.maxLife);ctx.stroke();
-      }
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=p.col;ctx.globalAlpha=p.a*(p.life/p.maxLife);ctx.fill();
-      p.x+=p.vx;p.y+=p.vy;p.life--;
-      if(p.life<=0||p.y<-20){ps[i]=mkP();ps[i].y=H+10;ps[i].x=Math.random()*W}
-    });
-    ctx.globalAlpha=1;
-    requestAnimationFrame(tick);
-  }
-  tick();
-})();
-
-// ══════════ LIGHTNING ══════════
-(function(){
-  const c=document.getElementById('cv-lightning'),ctx=c.getContext('2d');
-  let W,H;
-  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
-  resize();addEventListener('resize',resize);
-  function bolt(x1,y1,x2,y2,d,col){
-    if(d<=0){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=col;ctx.lineWidth=d<-2?.5:1;ctx.globalAlpha=.4+Math.random()*.4;ctx.stroke();return}
-    const mx=(x1+x2)/2+(Math.random()-.5)*80;
-    const my=(y1+y2)/2+(Math.random()-.5)*80;
-    bolt(x1,y1,mx,my,d-1,col);bolt(mx,my,x2,y2,d-1,col);
-    if(Math.random()>.7)bolt(mx,my,mx+(Math.random()-.5)*120,my+(Math.random()-.5)*120,d-2,col);
-  }
-  function flash(){
-    ctx.clearRect(0,0,W,H);
-    const col=['#00f0ff','#ff003c','#bf00ff'][Math.floor(Math.random()*3)];
-    const sx=Math.random()*W;
-    bolt(sx,0,sx+(Math.random()-.5)*200,H*.6+Math.random()*H*.4,4,col);
-    setTimeout(()=>ctx.clearRect(0,0,W,H),120);
-  }
-  setInterval(()=>{if(Math.random()>.55)flash()},2800);
-})();
-
-// ══════════ MOUSE PARALLAX ══════════
-const heroBg=document.querySelector('.hero-bg');
-const heroGrid=document.querySelector('.hero-grid');
-addEventListener('mousemove',e=>{
-  const x=(e.clientX/innerWidth-.5)*18,y=(e.clientY/innerHeight-.5)*10;
-  heroBg.style.transform=`scale(1.1) translate(${x}px,${y}px)`;
-  heroGrid.style.transform=`perspective(400px) rotateX(25deg) translateY(${-y*.5}px) translateX(${x*.3}px)`;
-});
-
-// ══════════ SCROLL ANIMATIONS ══════════
-const sections=document.querySelectorAll('.day-section');
-const navItems=document.querySelectorAll('.dn');
-const secObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.05});
-sections.forEach(s=>secObs.observe(s));
-const dotObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=[...sections].indexOf(e.target);navItems.forEach((d,j)=>d.classList.toggle('active',i===j))}})},{threshold:.4});
-sections.forEach(s=>dotObs.observe(s));
-navItems.forEach((item,i)=>item.addEventListener('click',()=>sections[i].scrollIntoView({behavior:'smooth',block:'start'})));
-const evObs=new IntersectionObserver(es=>{es.forEach(entry=>{if(entry.isIntersecting)entry.target.querySelectorAll('.event').forEach((ev,i)=>setTimeout(()=>ev.classList.add('ev-in'),i*100))})},{threshold:.03});
-sections.forEach(s=>evObs.observe(s));
-
-// ══════════ CARD CURSOR GLOW ══════════
-document.querySelectorAll('.event-card').forEach(card=>{
-  card.addEventListener('mousemove',e=>{
-    const r=card.getBoundingClientRect();
-    const x=e.clientX-r.left,y=e.clientY-r.top;
-    card.style.background=`radial-gradient(circle at ${x}px ${y}px, rgba(0,240,255,.04), rgba(6,6,15,1) 60%)`;
-  });
-  card.addEventListener('mouseleave',()=>{card.style.background=''});
-});
-</script>
 </body>
 </html>
