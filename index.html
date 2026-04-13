@@ -3,229 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ユウスケの旅行サイト！！ | PREMIUM DYNAMIC TRIP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Montserrat:wght@900&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <title>ユウスケのるんるん旅行記(*'▽') | ARIMA & KOBE KAWAII TRIP</title>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #e74c3c;
-            --secondary: #3498db;
-            --accent: #f1c40f;
-            --dark: #1a1a1a;
-            --bg: #f8f9fa;
+            --arimapink: #ff9a9e; /* 有馬のほっこりピンク */
+            --kobeblue: #a1c4fd; /* 神戸のさわやかブルー */
+            --rokkogreen: #c3cfe2; /* 六甲山のやさしいグリーン */
+            --accent: #fecfef;
+            --text: #5d5d5d;
         }
 
         body {
-            font-family: 'Noto Sans JP', sans-serif;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
             margin: 0;
-            background-color: var(--bg);
-            color: var(--dark);
+            background-color: #fdfbfb;
+            color: var(--text);
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
-        /* ヒーローエリアの動的エフェクト */
+        /* ヒーローエリア */
         .hero {
             height: 100vh;
-            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 100%),
-                        url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=1500');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* パララックス効果 */
+            background: linear-gradient(135deg, var(--accent) 0%, #fff 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* ぴょんぴょん跳ねる文字アニメーション */
         .hero h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: #ff6b6b;
             margin: 0;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            animation: fadeInDown 1.5s ease;
+            text-shadow: 3px 3px 0 white;
+            display: flex;
+        }
+
+        .hero h1 span {
+            animation: bounce 0.6s ease infinite alternate;
+            display: inline-block;
+        }
+
+        /* 文字ごとのアニメーション遅延 */
+        .hero h1 span:nth-child(1) { animation-delay: 0.0s; }
+        .hero h1 span:nth-child(2) { animation-delay: 0.1s; }
+        .hero h1 span:nth-child(3) { animation-delay: 0.2s; }
+        .hero h1 span:nth-child(4) { animation-delay: 0.3s; }
+        .hero h1 span:nth-child(5) { animation-delay: 0.4s; }
+        .hero h1 span:nth-child(6) { animation-delay: 0.5s; }
+        .hero h1 span:nth-child(7) { animation-delay: 0.6s; }
+
+        @keyframes bounce {
+            100% { transform: translateY(-20px); text-shadow: 3px 15px 0 rgba(0,0,0,0.1); }
         }
 
         .hero p {
             font-size: 1.5rem;
-            letter-spacing: 5px;
+            font-weight: bold;
+            color: #888;
             margin-top: 20px;
-            animation: fadeInUp 1.5s ease;
-            background: rgba(231, 76, 60, 0.8);
-            padding: 5px 30px;
+        }
+
+        /* 背景をふわふわ飛ぶ丸 */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.5;
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
         /* コンテンツ */
         .container {
-            max-width: 1100px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 100px 20px;
+            padding: 50px 20px;
         }
 
-        .day-section {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 50px;
-            margin-bottom: 150px;
-            align-items: start;
-        }
-
-        @media (max-width: 768px) {
-            .day-section { grid-template-columns: 1fr; }
-        }
-
-        .day-info h2 {
-            font-size: 4rem;
-            color: var(--primary);
-            margin: 0;
-            line-height: 1;
-        }
-
-        .day2-color { color: var(--secondary) !important; }
-
-        .timeline-card {
+        .day-card {
             background: white;
+            border-radius: 30px;
             padding: 40px;
-            border-radius: 2px; /* あえての角ばったデザインでモダンに */
-            box-shadow: 20px 20px 0px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .timeline-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .step {
-            margin-bottom: 40px;
-            border-left: 4px solid var(--primary);
-            padding-left: 20px;
-        }
-
-        .day2-border { border-left-color: var(--secondary) !important; }
-
-        .step h3 {
-            font-size: 1.4rem;
-            margin: 0 0 10px 0;
-        }
-
-        .step p {
-            color: #666;
-            line-height: 1.8;
-        }
-
-        /* アニメーションキーフレーム */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 100px 20px;
-            text-align: center;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 15px 40px;
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 30px;
+            box-shadow: 0 15px 0 var(--accent);
+            margin-bottom: 80px;
+            position: relative;
             transition: 0.3s;
-            border-radius: 50px;
         }
 
-        .btn:hover {
-            transform: scale(1.1);
-            background: var(--dark);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        .day-card:hover {
+            transform: scale(1.02) rotate(1deg);
         }
+
+        .day-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            color: white;
+            background: var(--arimapink);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .day2 .day-title {
+            background: var(--kobeblue);
+        }
+
+        /* イラストアイコン */
+        .icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            animation: wiggle 2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .spot {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 2px dashed #ddd;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .spot:hover {
+            background: white;
+            border-color: var(--arimapink);
+            transform: translateX(10px);
+        }
+
+        .day2 .spot:hover {
+            border-color: var(--kobeblue);
+        }
+
+        .spot h3 {
+            margin: 0 0 10px 0;
+            color: #ff6b6b;
+        }
+        .day2 .spot h3 { color: #54a0ff; }
+
+        .spot p { margin: 0; font-size: 0.95rem; line-height: 1.6; }
+
+        /* 動くイラスト（擬似的なもの） */
+        .moving-fig {
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+
+        /* 最後のフッター */
+        footer {
+            background: var(--text);
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 100px;
+            border-radius: 50px 50px 0 0;
+        }
+
+        .heart {
+            color: #ff6b6b;
+            animation: heartBeat 1s infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
     </style>
 </head>
 <body>
 
     <section class="hero">
-        <h1 data-aos="zoom-in">YUSUKE'S TRIP</h1>
-        <p>ARIMA × ROKKO × KOBE</p>
-        <a href="#plan" class="btn">PLAN START</a>
+        <div class="bubble" style="width:80px; height:80px; left:10%; animation-delay:0s;"></div>
+        <div class="bubble" style="width:120px; height:120px; left:20%; animation-delay:2s;"></div>
+        <div class="bubble" style="width:60px; height:60px; left:50%; animation-delay:4s;"></div>
+        <div class="bubble" style="width:100px; height:100px; left:80%; animation-delay:1s;"></div>
+        <div class="bubble" style="width:70px; height:70px; left:90%; animation-delay:6s;"></div>
+
+        <h1>
+            <span>ユ</span><span>ウ</span><span>ス</span><span>ケ</span><span>の</span><span>旅</span><span>！</span>
+        </h1>
+        <p>ARIMA ★ ROKKO ★ KOBE</p>
+        <p style="font-size:3rem;">🚗💨</p>
     </section>
 
-    <div class="container" id="plan">
+    <div class="container">
         
-        <div class="day-section">
-            <div class="day-info" data-aos="fade-right">
-                <h2>01</h2>
-                <p><strong>Mountain & Spa</strong><br>初日は空から温泉へ</p>
+        <div class="day-card day1">
+            <div class="moving-fig" style="top:-60px; right:20px; animation: wiggle 1s infinite;">⛰️</div>
+            <div class="day-title">DAY 1</div>
+            <p style="font-weight:bold; font-size:1.2rem; margin-bottom:30px;">
+                <span class="icon">✨</span>山の上で遊んで、温泉でほっこりする日<span class="icon">✨</span>
+            </p>
+            
+            <div class="spot">
+                <h3><span class="icon">🚙</span>AM: しゅっぱーつ！</h3>
+                <p>東広島からブブーンとドライブ。お気に入りの音楽をかけてね♪</p>
             </div>
-            <div class="timeline-card" data-aos="fade-up">
-                <div class="step">
-                    <h3>AM: 出発 & 六甲山アプローチ</h3>
-                    <p>気分を上げて神戸へ。昼間のドライブは最高。</p>
-                </div>
-                <div class="step">
-                    <h3>12:00: 六甲ガーデンテラス</h3>
-                    <p>標高約880m。瀬戸内海の絶景パノラマを背景にランチタイム。空気の美味さがスパイス！</p>
-                </div>
-                <div class="step">
-                    <h3>15:00: 六甲有馬ロープウェー</h3>
-                    <p>空中散歩で有馬温泉へダイレクトイン。このルートが一番「動的」でワクワクする瞬間。</p>
-                </div>
-                <div class="step">
-                    <h3>16:30: 有馬温泉チェックイン</h3>
-                    <p>名湯「金泉」を独り占め。夜は湯本坂の提灯の灯りを眺めてリラックス。</p>
-                </div>
+            
+            <div class="spot">
+                <h3><span class="icon">🍱</span>12:00: 六甲ガーデンテラス</h3>
+                <p>わぁー！海がひろーい！絶景を見ながら美味しいランチを食べよう。空気がおいしいっ！</p>
+            </div>
+            
+            <div class="spot">
+                <h3><span class="icon">🚠</span>15:00: ロープウェー</h3>
+                <p>空をお散歩！有馬温泉へGO！窓からの景色にワクワクが止まらない！</p>
+            </div>
+            
+            <div class="spot">
+                <h3><span class="icon">♨️</span>16:30: 有馬温泉に到着！</h3>
+                <p>お宿にチェックイン。茶色い「金泉」に入って、お肌すべすべー！夜はお散歩しよう。</p>
+                <div class="moving-fig" style="bottom:-20px; left:-50px; animation: wiggle 3s infinite;">🐒</div>
             </div>
         </div>
 
-        <div class="day-section">
-            <div class="day-info" data-aos="fade-right">
-                <h2 class="day2-color">02</h2>
-                <p><strong>City & Harbor</strong><br>二日目は街と海を歩く</p>
+        <div class="day-card day2">
+            <div class="day-title">DAY 2</div>
+            <p style="font-weight:bold; font-size:1.2rem; margin-bottom:30px;">
+                <span class="icon">⛵</span>おしゃれな街と海辺をお散歩する日<span class="icon">⛵</span>
+            </p>
+            
+            <div class="spot">
+                <h3><span class="icon">🍘</span>10:00: 有馬温泉ぶらぶら</h3>
+                <p>朝ごはんのあとはお土産探し。炭酸せんべいをパリパリ食べ歩き♪</p>
             </div>
-            <div class="timeline-card" data-aos="fade-up">
-                <div class="step day2-border">
-                    <h3>10:00: 有馬の朝散策</h3>
-                    <p>温泉卵や炭酸せんべいの香りに包まれて、お土産ハント。</p>
-                </div>
-                <div class="step day2-border">
-                    <h3>12:00: 神戸北野・南京町</h3>
-                    <p>異人館でカフェ、または南京町でガッツリ中華。神戸の「食」をハシゴ。</p>
-                </div>
-                <div class="step day2-border">
-                    <h3>14:30: メリケンパーク</h3>
-                    <p>ポートタワーを見上げて「BE KOBE」で記念撮影。潮風が旅の終わりを演出。</p>
-                </div>
-                <div class="step day2-border">
-                    <h3>17:00: 帰路へ</h3>
-                    <p>東広島への道中も、車内のお気に入りの曲で最後まで楽しむのがユウスケ流。</p>
-                </div>
+            
+            <div class="spot">
+                <h3><span class="icon">🍰</span>12:00: 神戸北野・南京町</h3>
+                <p>可愛い異人館でケーキ？それとも南京町で肉まん？どっちも食べたいー！</p>
+            </div>
+            
+            <div class="spot">
+                <h3><span class="icon">⚓</span>14:30: メリケンパーク</h3>
+                <p>神戸ポートタワーとパシャリ！「BE KOBE」の文字の前でカッコつけちゃおう。</p>
+                <div class="moving-fig" style="top:50px; right:-50px; animation: bounce 1s infinite alternate;">🚢</div>
+            </div>
+            
+            <div class="spot">
+                <h3><span class="icon">👋</span>17:00: バイバイ神戸</h3>
+                <p>楽しかったね！東広島へ帰ります。おうちに帰るまでが旅行だよ！</p>
             </div>
         </div>
 
     </div>
 
     <footer>
-        <h2 data-aos="flip-up">Have a Nice Trip, YUSUKE!!</h2>
-        <p style="margin-top:20px; opacity:0.6;">&copy; 2026 ユウスケの旅行サイト！！ Official Design</p>
+        <p style="font-size:2rem; font-weight:900;">ユウスケ、最高の旅行にしてね！<span class="heart">♥</span></p>
+        <p style="margin-top:20px; opacity:0.6; font-size:0.8rem;">&copy; 2026 ユウスケのるんるん旅行記Official</p>
     </footer>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 1000,
-            once: false,
-        });
-    </script>
 </body>
 </html>
